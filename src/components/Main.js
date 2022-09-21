@@ -30,6 +30,7 @@ const Main = () => {
         const isSame = dice.every(die => die.lockedDieUrl === firstValue);
 
         if(isLocked && isSame){
+            setTenzies(true);
             pause();
             const newBestTime = [{
                 hours : hours,
@@ -40,14 +41,18 @@ const Main = () => {
             if(bestTime.length === 0){
                 setBestTime(newBestTime);
                 localStorage.setItem('bestTime',JSON.stringify(newBestTime));
+            }else{
+                const bestTimeInSeconds = (bestTime[0].hours * 3600) + 
+                                        (bestTime[0].minutes * 60) + 
+                                        (bestTime[0].seconds);
+                const newTimeInSeconds = (hours * 3600) + 
+                                        (minutes * 60) + 
+                                        (seconds);
+                if(newTimeInSeconds < bestTimeInSeconds){
+                    setBestTime(newBestTime);
+                    localStorage.setItem('bestTime',JSON.stringify(newBestTime));
+                }  
             }
-            else if(bestTime[0].hours >= hours && 
-                bestTime[0].minutes >= minutes && 
-                bestTime[0].seconds >= seconds){
-                setBestTime(newBestTime);
-                localStorage.setItem('bestTime',JSON.stringify(newBestTime));
-            }
-            setTenzies(true);
         }else setTenzies(false);
     },[dice]);
 
